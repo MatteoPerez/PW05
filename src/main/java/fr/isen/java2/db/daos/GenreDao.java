@@ -49,6 +49,15 @@ public class GenreDao {
 	}
 
 	public void addGenre(String name) {
-		throw new RuntimeException("Method is not yet implemented");
+		try(Connection connection = DataSourceFactory.getDataSource().getConnection();) {
+			String sqlQuery = "INSERT INTO genre(name)" + "VALUES(?)";
+			try(PreparedStatement statement = connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
+				statement.setString(1, name);
+				statement.executeUpdate();
+			}
+		} catch(SQLException e) {
+			// Manage Exception
+	        e.printStackTrace();
+		}
 	}
 }
