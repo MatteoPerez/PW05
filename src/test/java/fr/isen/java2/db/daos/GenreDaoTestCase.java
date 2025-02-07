@@ -38,8 +38,7 @@ public class GenreDaoTestCase {
 		List<Genre> genres = genreDao.listGenres();
 		// THEN
 		assertThat(genres).hasSize(3);
-		assertThat(genres).extracting("id", "name").containsOnly(tuple(1, "Drama"), tuple(2, "Comedy"),
-				tuple(3, "Thriller"));
+		assertThat(genres).extracting("id", "name").containsOnly(tuple(1, "Drama"), tuple(2, "Comedy"), tuple(3, "Thriller"));
 	}
 	
 	@Test

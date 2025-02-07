@@ -1,14 +1,24 @@
 package fr.isen.java2.db.daos;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.tuple;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import fr.isen.java2.db.entities.Genre;
+import fr.isen.java2.db.entities.Movie;
+
 public class MovieDaoTestCase {
+	
+	private MovieDao movieDao = new MovieDao();
+	
 	@BeforeEach
 	public void initDb() throws Exception {
 		Connection connection = DataSourceFactory.getDataSource().getConnection();
@@ -39,7 +49,14 @@ public class MovieDaoTestCase {
 	
 	 @Test
 	 public void shouldListMovies() {
-		 fail("Not yet implemented");
+		// WHEN
+		List<Movie> movies = movieDao.listMovies();
+		// THEN
+		assertThat(movies).hasSize(3);
+		assertThat(movies).extracting("id", "title", "releaseDate", "genre.id", "duration", "director", "summary").containsOnly(
+				tuple(1, "Title 1", java.time.LocalDate.of(2015, 11, 26), 1, 120, "director 1", "summary of the first movie"), 
+				tuple(2, "My Title 2", java.time.LocalDate.of(2015, 11, 14), 2, 114, "director 2", "summary of the second movie"), 
+				tuple(3, "Third title", java.time.LocalDate.of(2015, 12, 12), 2, 176, "director 3", "summary of the third movie"));
 	 }
 	
 	 @Test
