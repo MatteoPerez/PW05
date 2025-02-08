@@ -1,6 +1,7 @@
 package fr.isen.java2.db.daos;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -44,6 +45,26 @@ public class MovieDao {
 	}
 
 	public Movie addMovie(Movie movie) {
-		throw new RuntimeException("Method is not yet implemented");
+		try(Connection connection = DataSourceFactory.getDataSource().getConnection();) {
+			String sqlQuery = "INSERT INTO movie (title, release_date, genre_id, duration, director, summary) VALUES (?, ?, ?, ?, ?, ?)";
+			try(PreparedStatement statement = connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
+				statement.setString(1, movie.getTitle());
+	            statement.setDate(2, java.sql.Date.valueOf(movie.getReleaseDate()));
+	            statement.setInt(3, movie.getGenre().getId());
+	            statement.setInt(4, movie.getDuration());
+	            statement.setString(5, movie.getDirector());
+	            statement.setString(6, movie.getSummary());
+	            statement.executeUpdate();
+	            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        movie.setId(generatedKeys.getInt(1));
+                    }
+                }
+			}
+		} catch(SQLException e) {
+			// Manage Exception
+	        e.printStackTrace();
+		}
+		return movie;
 	}
 }
