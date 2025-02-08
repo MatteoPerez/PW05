@@ -41,7 +41,32 @@ public class MovieDao {
 	}
 
 	public List<Movie> listMoviesByGenre(String genreName) {
-		throw new RuntimeException("Method is not yet implemented");
+		List<Movie> listOfMovies = new ArrayList<>();
+		
+		try(Connection connection = DataSourceFactory.getDataSource().getConnection();) {
+			String sqlQuery = "SELECT * FROM movie m JOIN genre g ON m.genre_id = g.idgenre WHERE g.name = ?";
+			try(PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
+				statement.setString(1, genreName);
+				try(ResultSet results = statement.executeQuery()) {
+					while(results.next()) {
+						Genre genre = new Genre(results.getInt("idgenre"), results.getString("name"));
+						Movie movie = new Movie(
+								results.getInt("idmovie"), 
+								results.getString("title"),
+								results.getDate("release_date").toLocalDate(),
+								genre,
+								results.getInt("duration"),
+								results.getString("director"),
+								results.getString("summary"));
+						listOfMovies.add(movie);
+					}
+				}
+			}
+		} catch(SQLException e) {
+			// Manage Exception
+	        e.printStackTrace();
+		}
+		return listOfMovies;
 	}
 
 	public Movie addMovie(Movie movie) {
@@ -56,14 +81,14 @@ public class MovieDao {
 	            statement.setString(6, movie.getSummary());
 	            statement.executeUpdate();
 	            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        movie.setId(generatedKeys.getInt(1));
-                    }
-                }
+	            	if (generatedKeys.next()) {
+	            		movie.setId(generatedKeys.getInt(1));
+	            	}
+	            }
 			}
 		} catch(SQLException e) {
 			// Manage Exception
-	        e.printStackTrace();
+			e.printStackTrace();
 		}
 		return movie;
 	}

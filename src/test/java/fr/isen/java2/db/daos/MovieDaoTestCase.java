@@ -61,10 +61,14 @@ public class MovieDaoTestCase {
 				tuple(3, "Third title", java.time.LocalDate.of(2015, 12, 12), 2, 176, "director 3", "summary of the third movie"));
 	}
 	
-	 @Test
-	 public void shouldListMoviesByGenre() {
-		 fail("Not yet implemented");
-	 }
+	@Test
+	public void shouldListMoviesByGenre() {
+		// WHEN
+		List<Movie> movies = movieDao.listMoviesByGenre("Comedy");
+		// THEN
+		assertThat(movies).hasSize(2);
+		assertThat(movies).extracting("title").contains("My Title 2", "Third title");
+	}
 	
 	@Test
 	public void shouldAddMovie() throws Exception {		
@@ -73,19 +77,19 @@ public class MovieDaoTestCase {
 		movieDao.addMovie(movie);
 		// THEN		
 		Connection connection = DataSourceFactory.getDataSource().getConnection();
-	    PreparedStatement statement = connection.prepareStatement("SELECT * FROM movie WHERE title = ?");
-	    statement.setString(1, "Title 4");
-	    ResultSet resultSet = statement.executeQuery();
+		PreparedStatement statement = connection.prepareStatement("SELECT * FROM movie WHERE title = ?");
+		statement.setString(1, "Title 4");
+		ResultSet resultSet = statement.executeQuery();
 		
-	    assertThat(resultSet.next()).isTrue();
-	    assertThat(resultSet.getInt("idmovie")).isNotNull();
-	    assertThat(resultSet.getString("title")).isEqualTo("Title 4");
-	    assertThat(resultSet.getDate("release_date").toLocalDate()).isEqualTo(java.time.LocalDate.of(2023, 1, 1));
-	    assertThat(resultSet.getInt("genre_id")).isEqualTo(1);
-	    assertThat(resultSet.getInt("duration")).isEqualTo(130);
-	    assertThat(resultSet.getString("director")).isEqualTo("New Director");
-	    assertThat(resultSet.getString("summary")).isEqualTo("New summary");
-	    assertThat(resultSet.next()).isFalse();
+		assertThat(resultSet.next()).isTrue();
+		assertThat(resultSet.getInt("idmovie")).isNotNull();
+		assertThat(resultSet.getString("title")).isEqualTo("Title 4");
+		assertThat(resultSet.getDate("release_date").toLocalDate()).isEqualTo(java.time.LocalDate.of(2023, 1, 1));
+		assertThat(resultSet.getInt("genre_id")).isEqualTo(1);
+		assertThat(resultSet.getInt("duration")).isEqualTo(130);
+		assertThat(resultSet.getString("director")).isEqualTo("New Director");
+		assertThat(resultSet.getString("summary")).isEqualTo("New summary");
+		assertThat(resultSet.next()).isFalse();
 		
 		resultSet.close();
 		statement.close();
