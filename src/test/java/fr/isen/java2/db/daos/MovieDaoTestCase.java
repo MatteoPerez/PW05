@@ -1,7 +1,6 @@
 package fr.isen.java2.db.daos;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.Assertions.tuple;
 
 import java.sql.Connection;

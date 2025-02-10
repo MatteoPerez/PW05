@@ -53,7 +53,7 @@ public class GenreDao {
 
 	public void addGenre(String name) {
 		try(Connection connection = DataSourceFactory.getDataSource().getConnection();) {
-			String sqlQuery = "INSERT INTO genre(name)" + "VALUES(?)";
+			String sqlQuery = "INSERT INTO genre(name) VALUES(?)";
 			try(PreparedStatement statement = connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
 				statement.setString(1, name);
 				statement.executeUpdate();
