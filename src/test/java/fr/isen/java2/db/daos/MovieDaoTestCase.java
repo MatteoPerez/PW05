@@ -66,7 +66,7 @@ public class MovieDaoTestCase {
 		List<Movie> movies = movieDao.listMoviesByGenre("Comedy");
 		// THEN
 		assertThat(movies).hasSize(2);
-		assertThat(movies).extracting("title").contains("My Title 2", "Third title");
+		assertThat(movies).allSatisfy(movie -> assertThat(movie.getGenre().getName()).isEqualTo("Comedy"));
 	}
 	
 	@Test
