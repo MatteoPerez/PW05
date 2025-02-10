@@ -31,13 +31,14 @@ public class MovieDao {
 								results.getString("summary"));
 						listOfMovies.add(movie);
 					}
+					return listOfMovies;
 				}
 			}
 		} catch(SQLException e) {
 			// Manage Exception
 	        e.printStackTrace();
+	        return null;
 		}
-		return listOfMovies;
 	}
 
 	public List<Movie> listMoviesByGenre(String genreName) {
@@ -60,13 +61,14 @@ public class MovieDao {
 								results.getString("summary"));
 						listOfMovies.add(movie);
 					}
+					return listOfMovies;
 				}
 			}
 		} catch(SQLException e) {
 			// Manage Exception
 	        e.printStackTrace();
+	        return null;
 		}
-		return listOfMovies;
 	}
 
 	public Movie addMovie(Movie movie) {
@@ -84,12 +86,13 @@ public class MovieDao {
 	            	if (generatedKeys.next()) {
 	            		movie.setId(generatedKeys.getInt(1));
 	            	}
+	            	return movie;
 	            }
 			}
 		} catch(SQLException e) {
 			// Manage Exception
 			e.printStackTrace();
+			return null;
 		}
-		return movie;
 	}
 }

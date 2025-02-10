@@ -22,13 +22,14 @@ public class GenreDao {
 						Genre genre = new Genre(results.getInt("idgenre"), results.getString("name"));
 						listOfGenres.add(genre);
 					}
+					return listOfGenres;
 				}
 			}
 		} catch(SQLException e) {
 			// Manage Exception
 	        e.printStackTrace();
+	        return null;
 		}
-		return listOfGenres;
 	}
 
 	public Genre getGenre(String name) {
@@ -38,14 +39,16 @@ public class GenreDao {
 				try(ResultSet results = statement.executeQuery()) {
 					if(results.next()) {
 						return new Genre(results.getInt("idgenre"), results.getString("name"));
+					} else {
+						return null;
 					}
 				}
 			}
 		} catch(SQLException e) {
 			// Manage Exception
 	        e.printStackTrace();
+	        return null;
 		}
-		return null;
 	}
 
 	public void addGenre(String name) {
